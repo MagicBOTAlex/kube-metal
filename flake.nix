@@ -21,7 +21,7 @@
   };
   outputs = { self, nixpkgs, microvm, ... }@inputs: {
     # configuration name matches hostname, so this system is chosen by default
-    nixosConfigurations.metal = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.kube-metal = nixpkgs.lib.nixosSystem {
       # pass along all the inputs and stuff to the system function
       specialArgs = { inherit inputs; };
       modules = [

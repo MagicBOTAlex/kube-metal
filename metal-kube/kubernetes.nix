@@ -5,18 +5,20 @@ let
   kubeMasterAPIServerPort = 6443;
 in
 {
-  imports = [ ./longhorn-deps.nix ];
+  imports = [ ];
 
   # resolve master hostname
   networking.extraHosts = ''
     ${kubeMasterIP} ${kubeMasterHostname}
     10.0.0.2 kube-daddy
     10.0.0.4 kube-desk
-    10.0.0.5 kube-snorre'';
+    10.0.0.5 kube-snorre
+    10.0.0.8 kube-metal
+  '';
   networking.firewall.enable = false;
 
   # packages for administration tasks
-  environment.systemPackages = with pkgs; [ kompose kubectl kubernetes ];
+  environment.systemPackages = with pkgs; [ kompose kubectl kubernetes kubernetes-helm ];
 
   systemd.services.kube-networking-fix = {
     description = "fucking, networking - IP cleanup and WireGuard start";
@@ -33,9 +35,9 @@ in
       # 3. Bring up the WireGuard interface
       ExecStart = pkgs.writeScript "fix-net.sh" ''
         #!${pkgs.stdenv.shell}
-        echo "Cleaning up conflicting routes and IPs..."
-        ${pkgs.iproute2}/bin/ip addr del 10.0.0.4/24 dev enp0s7 2>/dev/null || true
-        ${pkgs.iproute2}/bin/ip route del 10.0.0.0/24 dev enp0s7 2>/dev/null || true
+        # echo "Cleaning up conflicting routes and IPs..."
+        # ${pkgs.iproute2}/bin/ip addr del 10.0.0.4/24 dev enp0s7 2>/dev/null || true
+        # ${pkgs.iproute2}/bin/ip route del 10.0.0.0/24 dev enp0s7 2>/dev/null || true
       
         echo "Bringing up WireGuard tunnel..."
         ${pkgs.wireguard-tools}/bin/wg-quick up wireguard-kube
@@ -52,6 +54,8 @@ in
     stopIfChanged = true;
   };
 
+  services.resolved.enable = true;
+  services.flannel.iface = "wireguard-kube";
 
   services.kubernetes =
     let
@@ -73,7 +77,7 @@ in
 
 
       # needed if you use swap
-      kubelet.extraOpts = "--fail-swap-on=false --node-ip=10.0.0.4";
+      kubelet.extraOpts = "--fail-swap-on=false --node-ip=10.0.0.8 ";
     };
 }
 

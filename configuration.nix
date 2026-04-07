@@ -15,7 +15,7 @@
     ./hardware-configuration.nix
     ./aliases.nix
     ./modules/drivers/nvidia.nix
-    # ./docker.nix
+    ./docker.nix
     # ./modules/k8s.nix
     # ./modules/oscd.nix
 
@@ -32,6 +32,8 @@
 
     # ./modules/nfs.nix
 
+    ./metal-kube/kubernetes.nix
+
     # ./vms/kube-vm
     # ./vms/kube-vm2
     # ./vms/kube-daddy
@@ -45,8 +47,10 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.timeout = 2;
+  boot.kernelParams = [ "nomodeset" ];
 
-  networking.hostName = "metal"; # Define your hostname.
+
+  networking.hostName = "kube-metal"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   environment.variables.EDITOR = "nvim";
@@ -153,13 +157,13 @@
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-#   services.openssh.enable = true;
+  #   services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
-   networking.firewall.enable = false;
+  networking.firewall.enable = false;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
