@@ -18,7 +18,7 @@ in
   networking.firewall.enable = false;
 
   # packages for administration tasks
-  environment.systemPackages = with pkgs; [ kompose kubectl kubernetes kubernetes-helm ];
+  environment.systemPackages = with pkgs; [ kompose kubectl kubernetes kubernetes-helm nfs-utils];
 
   systemd.services.kube-networking-fix = {
     description = "fucking, networking - IP cleanup and WireGuard start";
