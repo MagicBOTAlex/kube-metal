@@ -11,7 +11,11 @@
 
     serviceConfig = {
       # Use the kubelet binary from the Nix store
-      ExecStart = "${pkgs.kubernetes}/bin/kubelet";
+      ExecStart = ''${pkgs.kubernetes}/bin/kubelet \
+      --config=/var/lib/kubelet/config.yaml \
+      --kubeconfig=/etc/kubernetes/kubelet.conf \
+      --pod-manifest-path=/etc/kubernetes/manifests
+      '';
 
       Restart = "always";
       RestartSec = 10;

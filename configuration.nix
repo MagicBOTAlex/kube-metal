@@ -15,7 +15,6 @@
     ./hardware-configuration.nix
     ./aliases.nix
     ./modules/drivers/nvidia.nix
-    ./docker.nix
     # ./modules/k8s.nix
     # ./modules/oscd.nix
 
@@ -32,7 +31,7 @@
 
     # ./modules/nfs.nix
 
-    ./metal-kube/kubernetes.nix
+    ./metal-kube/kubernetes/kubernetes.nix
 
     # ./vms/kube-vm
     # ./vms/kube-vm2
